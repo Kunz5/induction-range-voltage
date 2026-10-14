@@ -58,7 +58,7 @@ H1 −4.4 %, H2 −7.0 %, H3 +8.8 % / +16.4 % / +26.7 %.)*
 
 ## 4. Primary measurement, and why
 
-Clamp the target on the axis at **15, 20, 25, 30, 35 and 40 mm**. At each
+Clamp the target on the axis at **10, 12, 15, 20, 25, 30, 35 and 40 mm**. At each
 distance, lower the supply from 5.0 V until the alarm first sounds and record
 `V_trig`. Add one sweep with **no target** to find `V*`.
 
@@ -119,7 +119,7 @@ flagged, and the analysis is reported both with and without them.
 |---|---|---|
 | coil radius `a` | ≈ 22 mm | **estimate** — measure spiral outer and inner diameters, take `a = (outer + inner)/4` |
 | nominal range at 5.0 V | ≈ 50 mm | **recalled** — re-measure at 5.0 V with the chosen target |
-| fixed distances, primary | 15, 20, 25, 30, 35, 40 mm | fixed |
+| fixed distances, primary | 10, 12, 15, 20, 25, 30, 35, 40 mm | fixed |
 | supply range | 5.0 V down to oscillator dropout | rated 3.0–5.0 V |
 | highlighted window | 4.2 → 3.2 V | single Li-ion cell |
 | module | `MetalDetector_V2.3 (303METALDET)`, MOD-43 class | board 65 × 60 mm |

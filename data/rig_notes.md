@@ -68,6 +68,7 @@ list below.
 
 | field | value |
 |---|---|
+| fixed distances for the primary measurement | 10, 12, 15, 20, 25, 30, 35, 40 mm |
 | how distance was measured | |
 | resolution of the distance measurement | |
 | how the coil was held fixed | |
@@ -114,9 +115,37 @@ unmodified board.
 
 ## Known sources of error, before taking data
 
-> Written before measurement. List what you expect to limit the result and
-> roughly how large you expect each effect to be.
+Written before measurement. Revised once, before any data, after the firmware
+moved the trigger decision off the operator and onto the board.
 
-1.
-2.
-3.
+1. **Distance zero and setting: ±1 mm.** The coil is printed on a board about
+   1.6 mm thick, so "distance from coil plane" is ambiguous by up to about
+   0.8 mm. Setting the target adds about ±0.5 mm. Effect on coupling `g²`:
+   `6·d·δd/(a²+d²)`, which is **10 % at 10 mm, 13.6 % at 20 mm and 11.5 % at
+   40 mm**. It is not largest at the close distances — it peaks at `d = a`, near
+   22 mm, and 10 mm is the least sensitive point on the list. The peak moves
+   with `a`, so this is recomputed once `a` is measured. *Mitigation:* measure
+   from the coil face every time, use fixed spacer blocks per distance, and
+   record the reference point.
+
+2. **Voltage step resolution: ±0.01 V.** The firmware removes human reaction
+   time at the trigger. What is left is the sweep step: the true trigger lies
+   somewhere within the last 0.01 V step. Chatter near `V*` may add uncertainty
+   there; it is recorded per trial as `t_confirm − t_first`, dropout count and
+   peak mV.
+
+3. **Voltage measurement and ripple: ±0.02–0.05 V.** The multimeter's accuracy
+   is about ±(0.5 % + 2 digits), roughly ±0.02 V at 3 V. A buck converter adds
+   tens of millivolts of ripple. With the buzzer lifted, the lead drop at about
+   5 mA is under 5 mV. *Mitigation:* measure at the module's own terminals,
+   record the meter model, and prefer a bench supply.
+
+4. **Temperature drift: about ±6 mV in `V_BE`, up to about ±20 mV in `V*`.**
+   `V_BE` moves about −2 mV per °C, so ±3 °C in a session gives ±6 mV, and
+   `V* = V_BE/c` amplifies that if `c` is small. *Mitigation:* warm up for 60 s,
+   record temperature at the start and end, and repeat the no-target `V*` sweep
+   at the start and end of every session.
+
+5. **Target placement: a few percent in coupling.** Off-axis or tilted placement
+   changes `g(d)`. *Mitigation:* use a jig and keep the same target orientation
+   every trial.
