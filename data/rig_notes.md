@@ -32,9 +32,9 @@ Date these notes taken:
 
 | field | value |
 |---|---|
-| coil outer diameter | **pending** — measure the printed spiral. |
-| coil inner diameter | **pending** — measure the printed spiral. |
-| radius `a` used in the model, and why that choice | **pending.** Planned: `a = (outer + inner)/4`, the mean radius of the winding. The spiral is square, so this is an equivalent-circular-loop choice and the substitution must be stated as such. Working estimate 22 mm, not yet measured. |
+| coil outer diameter | **pending** — the raw figure behind `a`; measured but not yet recorded here. |
+| coil inner diameter | **pending** — as above. Record both directions on a square spiral. |
+| radius `a` used in the model, and why that choice | **17.5 ± 1 mm**, measured as `(outer + inner)/4`, the mean radius of the winding. Not rounded: the value recorded is the value found. The ±1 mm is the practical limit of a ruler on a printed spiral. The spiral is square, so this is an equivalent-circular-loop substitution and is stated as such wherever it is used. |
 | number of turns, if countable | **pending** — countable from `figures/board_front.png`, not yet done. |
 | wire gauge, if known | n/a — printed copper, not wire. |
 | measured inductance | **pending.** Two spirals, one per board face (`L1`, `L2`); a continuity check also settles whether they are separate coupled windings or one centre-tapped winding. |
@@ -121,12 +121,14 @@ moved the trigger decision off the operator and onto the board.
 1. **Distance zero and setting: ±1 mm.** The coil is printed on a board about
    1.6 mm thick, so "distance from coil plane" is ambiguous by up to about
    0.8 mm. Setting the target adds about ±0.5 mm. Effect on coupling `g²`:
-   `6·d·δd/(a²+d²)`, which is **10 % at 10 mm, 13.6 % at 20 mm and 11.5 % at
-   40 mm**. It is not largest at the close distances — it peaks at `d = a`, near
-   22 mm, and 10 mm is the least sensitive point on the list. The peak moves
-   with `a`, so this is recomputed once `a` is measured. *Mitigation:* measure
-   from the coil face every time, use fixed spacer blocks per distance, and
-   record the reference point.
+   `6·d·δd/(a²+d²)`, equivalently `n_eff · δd/d`. Recomputed with the measured
+   `a` = 17.5 mm: **14.8 % at 10 mm, 17.1 % at 17.5 mm, 12.6 % at 40 mm**. It
+   peaks at `d = a`, so it is not worst at the close distances — 40 mm is the
+   least sensitive point on the list and 10 mm the second least. The estimate
+   of `a` = 22 mm used before measurement put the peak at 22 mm and the whole
+   budget 3–4 points lower; measuring `a` moved the peak inward and raised it.
+   *Mitigation:* measure from the coil face every time, use fixed spacer blocks
+   per distance, and record the reference point.
 
 2. **Voltage step resolution: ±0.01 V.** The firmware removes human reaction
    time at the trigger. What is left is the sweep step: the true trigger lies

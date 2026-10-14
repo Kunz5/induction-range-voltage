@@ -35,26 +35,38 @@ fixed-threshold textbook expectation.
 | **H2** | fixed threshold, exact loop geometry | `1/n_eff` |
 | **H3** | oscillator margin; range **rises** as `V` falls | `-[V*/(V-V*)] / n_eff` |
 
-## 3. Worked example at this rig's estimated geometry
+## 3. Worked example — measured geometry
 
-`a` = 22 mm (estimate), `d` = 50 mm (recalled), single Li-ion window
-4.2 → 3.2 V, `n_eff = 6d²/(a²+d²) = 5.03`.
+`a` = **17.5 ± 1 mm**, measured as `(outer + inner)/4`. A ruler on a printed
+spiral is good to about a millimetre, and the figure is recorded as measured
+rather than rounded. Range at full supply `d ≈ 50 mm` (recalled, to be
+re-measured). Window: one Li-ion cell, 4.2 → 3.2 V.
 
-| hypothesis | predicted change in range, 4.2 → 3.2 V |
+| hypothesis | change in `d_max`, 4.2 → 3.2 V |
 |---|---|
 | H0 | 0 % |
 | H1 | −4.4 % |
-| H2 | −5.3 % |
-| H3, `V*` = 2.0 V | **+6.8 %** |
-| H3, `V*` = 2.5 V | **+12.8 %** |
-| H3, `V*` = 2.8 V | **+20.9 %** |
+| H2 | −5.0 % |
+| H3, `V*` = 2.0 V | **+6.4 %** |
+| H3, `V*` = 2.5 V | **+12.1 %** |
+| H3, `V*` = 2.8 V | **+19.8 %** |
 
-This table shows that the hypotheses can be told apart numerically; it is not
-the final prediction. It gets recomputed once, with the measured `a` and `V*`,
-then frozen.
+Local exponent `n_eff = 6d²/(a² + d²)` at the measurement distances, with the
+range in brackets from `a` = 17.5 ± 1 mm:
 
-*(At the scaffold's demo geometry, `a` = 75 mm and `d` = 100 mm: H0 0 %,
-H1 −4.4 %, H2 −7.0 %, H3 +8.8 % / +16.4 % / +26.7 %.)*
+| `d` (mm) | 10 | 12 | 15 | 20 | 25 | 30 | 35 | 40 |
+|---|---|---|---|---|---|---|---|---|
+| `n_eff` | 1.48 | 1.92 | 2.54 | 3.40 | 4.03 | 4.48 | 4.80 | 5.04 |
+| range | 1.36–1.61 | 1.78–2.08 | 2.38–2.71 | 3.23–3.57 | 3.88–4.18 | 4.35–4.61 | 4.69–4.91 | 4.94–5.13 |
+
+The table shows the hypotheses are numerically separable at this geometry. H3
+depends on `V*`, which is measured after this commit; the three values bracket
+plausible cases.
+
+At 10–15 mm, `n_eff` is below 3 against 6 for a pure dipole. That is where the
+coil's near field matters most — it is why the exact loop model is used rather
+than the dipole approximation, and why those distances serve mainly to pin down
+`V*` rather than to test the geometry.
 
 ## 4. Primary measurement, and why
 
@@ -117,7 +129,7 @@ flagged, and the analysis is reported both with and without them.
 
 | quantity | value | status |
 |---|---|---|
-| coil radius `a` | ≈ 22 mm | **estimate** — measure spiral outer and inner diameters, take `a = (outer + inner)/4` |
+| coil radius `a` | **17.5 ± 1 mm** | **measured**, as `(outer + inner)/4` |
 | nominal range at 5.0 V | ≈ 50 mm | **recalled** — re-measure at 5.0 V with the chosen target |
 | fixed distances, primary | 10, 12, 15, 20, 25, 30, 35, 40 mm | fixed |
 | supply range | 5.0 V down to oscillator dropout | rated 3.0–5.0 V |
