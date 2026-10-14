@@ -97,6 +97,21 @@ list below.
 
 ---
 
+## Deliberate modifications to the circuit under test
+
+Anything changed on the board itself, recorded before it is used.
+
+| change | why | when | reverted? |
+|---|---|---|---|
+| Buzzer SG1 lifted; 10 kΩ fitted from Q3's collector to ground | The buzzer draws ~23 mA when it sounds, and that step sags the supply at the exact moment the trigger voltage is being read. Under H3 a sag lowers V, which raises sensitivity, which feeds back — so the unmodified board chatters around its own trigger point. The buzzer was also the only pull-down on Q3's collector, hence the resistor. | **pending** | |
+| Trigger sensed by microcontroller at Q3's collector | Removes the operator's reaction time, the largest error in the primary measurement. See `firmware/WIRING.md`. | **pending** | |
+
+This is a change to the thing being measured, not just to how it is measured.
+Pilot trials are run at one fixed distance **both with and without** the buzzer.
+If the trigger voltage differs between the two by more than its repeatability,
+the modification is not neutral and every result must be reported against the
+unmodified board.
+
 ## Known sources of error, before taking data
 
 > Written before measurement. List what you expect to limit the result and
