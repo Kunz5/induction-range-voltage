@@ -1,0 +1,6 @@
+{
+  "_comment": "Fill from data/rig_notes.md. Null until measured.",
+  "coil_radius_mm": null,
+  "nominal_range_mm": null,
+  "v_star_measured": null
+}
