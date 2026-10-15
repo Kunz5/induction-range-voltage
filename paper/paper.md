@@ -11,9 +11,9 @@ Battery-powered induction metal detectors lose supply voltage as their batteries
 
 # 1. Introduction
 
-In June 2025, at the IIT Bombay Makerspace, I built MineRoverX, an autonomous rover that sweeps a metal detector across the ground for landmine detection. The detector module had no data output — it signalled only by sounding a buzzer — so I soldered a connection from the buzzer into the rover's microcontroller. While documenting the rover, I noted that the detector needed recalibrating "for different battery voltages". I had built a machine whose ability to find metal changed while it was running, and I did not know by how much, or even in which direction.
+In June 2025, at the IIT Bombay Makerspace, I built MineRoverX [7], an autonomous rover that sweeps a metal detector across the ground for landmine detection. The detector module had no data output — it signalled only by sounding a buzzer — so I soldered a connection from the buzzer into the rover's microcontroller. While documenting the rover, I noted that the detector needed recalibrating "for different battery voltages". I had built a machine whose ability to find metal changed while it was running, and I did not know by how much, or even in which direction.
 
-That question is not specific to my rover. Handheld detectors used in humanitarian demining, utility location and inspection are almost all battery powered, and the supply falls throughout a session. If range changes with voltage, a detector that clears ground with a fresh battery may not clear it with a tired one — or may begin to false-alarm.
+That question is not specific to my rover. Handheld detectors used in humanitarian demining, utility location and inspection [6] are almost all battery powered, and the supply falls throughout a session. If range changes with voltage, a detector that clears ground with a fresh battery may not clear it with a tired one — or may begin to false-alarm.
 
 The textbook expectation is simple. The detection signal scales with supply voltage and falls as the sixth power of distance, so, against a fixed threshold, the maximum range should scale as $V^{1/6}$: a 24 % drop in voltage would cost only about 4–5 % of range. This paper argues that this is incomplete. Supply voltage enters a detector twice — once in the strength of the signal and once in the level at which the alarm fires — and which of these dominates decides not only the size of the effect but its sign.
 
@@ -23,11 +23,11 @@ The contributions of this version are: (i) a derivation that unifies four compet
 
 ## 2.1 The detector
 
-The module is a commercial induction metal detector (ProtoSupplies MOD-43 type) with a square spiral coil printed on the circuit board. Its schematic shows a transformer-feedback, tuned-collector oscillator running at roughly 300 kHz: the tank $L_1 \parallel C_3$ sits at the transistor's collector, and a coupled second winding $L_2$ feeds part of the tank voltage back to the base. The oscillation amplitude holds an alarm transistor off; when metal near the coil absorbs energy, the amplitude falls, the alarm transistor switches on, and the buzzer sounds. A trimmer potentiometer, R3, sets the sensitivity.
+The module is a commercial induction metal detector (ProtoSupplies MOD-43 type) with a square spiral coil printed on the circuit board. Its schematic [4] shows a transformer-feedback, tuned-collector oscillator running at roughly 300 kHz: the tank $L_1 \parallel C_3$ sits at the transistor's collector, and a coupled second winding $L_2$ feeds part of the tank voltage back to the base. The oscillation amplitude holds an alarm transistor off; when metal near the coil absorbs energy, the amplitude falls, the alarm transistor switches on, and the buzzer sounds. A trimmer potentiometer, R3, sets the sensitivity.
 
 ## 2.2 The coil's field at the target
 
-Treating the coil as a single circular loop of radius $a$ carrying current $I$, the Biot–Savart law gives the field on its axis at distance $d$:
+Treating the coil as a single circular loop of radius $a$ carrying current $I$, the Biot–Savart law [1] gives the field on its axis at distance $d$:
 
 $$B(d) = \frac{\mu_0 I a^2}{2\,(a^2+d^2)^{3/2}} = \frac{\mu_0 I}{2}\, g(d), \qquad g(d) = \frac{a^2}{(a^2+d^2)^{3/2}}.$$
 
@@ -35,11 +35,11 @@ Far from the coil ($d \gg a$) this reduces to the dipole field, proportional to 
 
 ## 2.3 Eddy currents in the target
 
-The coil current alternates at angular frequency $\omega$, so by Faraday's law the target experiences an EMF $\mathcal{E} = -\,d\Phi/dt$ of magnitude $\omega B A_t$, where $A_t$ is the effective area of its current path. This drives eddy currents, whose magnetic moment is proportional to $B$ at every step: the EMF is proportional to the rate of change of flux, the current to the EMF, and the moment to the current. By Lenz's law, the eddy currents oppose the change that produced them.
+The coil current alternates at angular frequency $\omega$, so by Faraday's law [1, 3] the target experiences an EMF $\mathcal{E} = -\,d\Phi/dt$ of magnitude $\omega B A_t$, where $A_t$ is the effective area of its current path. This drives eddy currents, whose magnetic moment is proportional to $B$ at every step: the EMF is proportional to the rate of change of flux, the current to the EMF, and the moment to the current. By Lenz's law [2, 3], the eddy currents oppose the change that produced them.
 
 ## 2.4 Why the coupling appears twice
 
-The detector does not sense the target directly; it senses the target's effect on its own coil. The coupling from coil to target is a mutual inductance $M \propto g(d)$. The return coupling — from the target's eddy currents back to the coil — is the *same* $M$, because mutual inductance is symmetric ($M_{12} = M_{21}$; Neumann's formula is unchanged when the two loops are swapped). The target therefore reflects an impedance proportional to $\omega^2 M^2$ into the coil, which appears as extra loss. The detection signal scales as
+The detector does not sense the target directly; it senses the target's effect on its own coil. The coupling from coil to target is a mutual inductance $M \propto g(d)$. The return coupling — from the target's eddy currents back to the coil — is the *same* $M$, because mutual inductance is symmetric ($M_{12} = M_{21}$; Neumann's formula [1] is unchanged when the two loops are swapped). The target therefore reflects an impedance proportional to $\omega^2 M^2$ into the coil, which appears as extra loss. The detection signal scales as
 
 $$S \propto g(d)^2 \cdot I.$$
 
@@ -131,7 +131,7 @@ This table demonstrates that the hypotheses are numerically separable at this ge
 | Detector module | Induction detector, MOD-43 type; transformer-feedback tuned-collector oscillator, ≈300 kHz; rated 3.0–5.0 V | vendor documentation and schematic |
 | Coil | Square printed spiral; outer 50 mm, inner 20 mm across the flats, both axes | measured, ruler (1 mm) |
 | Effective radius $a$ | 17.5 mm by the pre-registered definition (outer + inner)/4; 19.7 mm equal-area circle, used only as a sensitivity check | computed |
-| Target | 2020 ₹1 coin (2019 series): ferritic stainless steel (83 % Fe, 17 % Cr), 20 mm diameter, 3.09 g; attracted by a magnet | official specification; diameter and magnetism checked |
+| Target | 2020 ₹1 coin (2019 series): ferritic stainless steel (83 % Fe, 17 % Cr), 20 mm diameter, 3.09 g; attracted by a magnet | official specification [5]; diameter and magnetism checked |
 | Supply | School battery eliminator (Jainco, stepped), 6 V tap, with a laboratory rheostat in series for fine control | laboratory equipment |
 | Voltmeter | DT830-series 3½-digit digital multimeter, 20 V DC range, 0.01 V resolution; accuracy not stated on the case (series typical ±(0.5 % + 2 digits)); probes on the module's own supply pins | — |
 | Trigger latch | ESP32 microcontroller reading the alarm transistor's collector through a 10 kΩ / 15 kΩ divider on GPIO 34; firmware threshold 450 mV; detection confirmed after 50 ms continuous | firmware in repository |
@@ -197,5 +197,4 @@ Version 2 will report the measurements described in Section 5, analysed exactly 
 4. ProtoSupplies, "Metal Detector Module" (MOD-43) product documentation and schematic, protosupplies.com.
 5. Government of India, *Coinage of One Rupee, Two Rupees, Five Rupees, Ten Rupees and Twenty Rupees Rules, 2019* — specification of the ₹1 coin.
 6. A. Winfield, *Robotics: A Very Short Introduction*, Oxford University Press.
-7. D. J. C. MacKay, *Sustainable Energy — without the Hot Air*, UIT Cambridge.
-8. K. N. Khanwani, MineRoverX repository, github.com/Kunz5/mine-rover-x.
+7. K. N. Khanwani, MineRoverX repository, github.com/Kunz5/mine-rover-x.
