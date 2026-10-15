@@ -32,13 +32,16 @@ Date these notes taken:
 
 | field | value |
 |---|---|
-| coil outer diameter | **pending** — the raw figure behind `a`; measured but not yet recorded here. |
-| coil inner diameter | **pending** — as above. Record both directions on a square spiral. |
+| coil outer diameter, across flats | 50 mm on axis 1, 50 mm on axis 2 |
+| coil inner diameter, across flats | 20 mm on axis 1, 20 mm on axis 2 |
 | radius `a` used in the model, and why that choice | **17.5 ± 1 mm**, measured as `(outer + inner)/4`, the mean radius of the winding. Not rounded: the value recorded is the value found. The ±1 mm is the practical limit of a ruler on a printed spiral. The spiral is square, so this is an equivalent-circular-loop substitution and is stated as such wherever it is used. |
 | number of turns, if countable | **pending** — countable from `figures/board_front.png`, not yet done. |
+| shape | square spiral, printed traces, one per board face |
+| `a`, pre-registered definition `(outer + inner)/4` | **17.5 mm** — half the mean side, the inscribed circle of the mean square |
+| `a`, equal-area circle, `35/√π` | 19.7 mm — **sensitivity check only**, not the pre-registered value |
 | wire gauge, if known | n/a — printed copper, not wire. |
 | measured inductance | **pending.** Two spirals, one per board face (`L1`, `L2`); a continuity check also settles whether they are separate coupled windings or one centre-tapped winding. |
-| measurement instrument | **pending** |
+| measurement instrument | ruler, 1 mm resolution |
 
 ## Supply
 
@@ -56,13 +59,28 @@ list below.
 
 ## Target
 
-| field | value |
-|---|---|
-| material | |
-| shape and dimensions | |
-| mass | |
-| orientation relative to the coil axis | |
-| how orientation was held constant between trials | |
+| field | value | source |
+|---|---|---|
+| object | ₹1 coin, dated 2020 (2019 series) | measured |
+| material | ferritic stainless steel, 83 % Fe / 17 % Cr (Coinage Rules 2019) — **expected magnetic**; magnet test on this coin not yet done | official spec |
+| dimensions | 20 mm diameter, 3.09 g (permitted 2.97–3.21 g); thickness not specified in the Rules | official spec, **not measured** |
+| orientation | flat, parallel to the coil, centred on the axis; same coin every trial | measured |
+| same object for pilot and all main-run trials | yes — this coin is set aside for the experiment | measured |
+
+**Note.** 20 mm diameter is comparable to the coil (`a` = 17.5 mm), not small
+relative to it as the model assumes; ferritic steel adds magnetisation to the
+eddy-current response. Both are limitations. Dimensions are official spec, not
+measured.
+
+**Two conflicts with the pre-registered derivation, recorded rather than
+resolved here.** Section B of `theory/derivation.md` states that a non-ferrous
+target is preferred, "because it leaves eddy currents as the only mechanism",
+and the derivation assumes throughout a target small compared with `a`. This
+target is neither. `derivation.md` is the pre-registration and is not edited;
+the conflict is reported, and its consequences belong in the paper's discussion.
+
+Sources: *Coinage of One Rupee, Two Rupees, Five Rupees, Ten Rupees and Twenty
+Rupees Rules, 2019*; Wikipedia, "Indian 1-rupee coin".
 
 ## Geometry and measurement method
 
@@ -81,7 +99,7 @@ list below.
 
 | field | value |
 |---|---|
-| ambient temperature range over the session | |
+| ambient temperature range over the session | 26 °C at pilot (thermometer); to be recorded at the start and end of every block in the main run |
 | nearby metal, and distance to it | |
 | mains or other interference noted | |
 | floor or bench material | |
@@ -112,6 +130,57 @@ Pilot trials are run at one fixed distance **both with and without** the buzzer.
 If the trigger voltage differs between the two by more than its repeatability,
 the modification is not neutral and every result must be reported against the
 unmodified board.
+
+## Coil shape
+
+The model treats the coil as a single circular loop. The coil is square. The
+primary analysis uses the pre-registered `a` = 17.5 mm, half the mean side, the
+inscribed circle of the mean square. A secondary and clearly labelled
+sensitivity analysis uses the equal-area radius 19.7 mm, which matches the
+loop's far-field moment.
+
+Recorded here **before any main-run data**, so that the alternative was declared
+in advance rather than chosen after seeing the result. `theory/predictions.md`
+is not changed: 17.5 mm remains the pre-registered value and the equal-area
+figure is reported alongside, never in place of it.
+
+## Self-test — firmware latch, before pilot
+
+| step | condition | expected | read |
+|---|---|---|---|
+| 1 | no metal near coil, 5.0 V | 0 | 0 |
+| 2 | metal on coil, 5.0 V | 1 | 1 |
+| 3 | metal on coil, **2.6 V** | 1 | 1 |
+
+Result: **passed**. Step 3 is the one that matters — it confirms the trigger is
+decided against the 450 mV firmware threshold and not against a logic level,
+which would have gone deaf at the bottom of the sweep.
+
+## Pilot
+
+| field | value |
+|---|---|
+| distance | 20 mm |
+| alarm behaviour | silent at 5.0 V; sounds as the supply falls through ≈ 3.5 V |
+| trigger voltages | 3.52 (fitted), 3.54 (lifted), 3.50 (lifted), 3.51 (fitted) V |
+| design | ABBA — fitted, lifted, lifted, fitted — so a linear drift over the session cancels |
+| fitted mean / lifted mean | 3.515 V / 3.520 V; difference **+0.005 V** |
+| spread | range 0.04 V, sd 0.0171 V (n = 4) |
+| 95 % CI on the difference | **+0.005 ± 0.073 V**, from t(2 dof) |
+| conclusion | **No difference detected.** With two trials per arm the pilot can only exclude a shift larger than about 0.07 V; it does not establish that the modification is neutral to better than that. |
+| chatter figures | **not recorded** — the firmware's `t_first` / `t_confirm` / dropout / peak output is therefore still unexercised on real hardware |
+| temperature | 26 °C, thermometer |
+| data | `data/pilot.csv` |
+
+## Fixed from this point
+
+- **R3, the sensitivity potentiometer: frozen** at its pilot position, and not
+  to be touched for the rest of the experiment. `R3` sets the oscillator's
+  amplitude and therefore `V* = V_BE/c`, so moving it moves the quantity being
+  measured. If it is moved by accident, record it and treat the data before and
+  after as separate series.
+- Buzzer: lifted.
+- Trial order: `data/run_order.md`.
 
 ## Known sources of error, before taking data
 
