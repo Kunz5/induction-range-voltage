@@ -64,7 +64,7 @@ supply's own calibration are both excluded.
 | bench supply model | |
 | voltage measured at the module terminals, not at the supply | yes — DMM probes at the module's own power terminals |
 | meter used, and its stated accuracy | DT830-series 3½-digit DMM, 20 V DC range, 0.01 V resolution. No accuracy printed on the case; the series is typically ±(0.5 % + 2 digits), which is **an assumption about this meter, not a specification of it** |
-| series resistance between supply and module, if measured | |
+| series resistance between supply and module, if measured | the rheostat is itself the series element; its set resistance is **not recorded** and changes with every voltage setting |
 
 ## Target
 
@@ -277,10 +277,14 @@ moved the trigger decision off the operator and onto the board.
    peak mV.
 
 3. **Voltage measurement and ripple: ±0.02–0.05 V.** The multimeter's accuracy
-   is about ±(0.5 % + 2 digits), roughly ±0.02 V at 3 V. A buck converter adds
-   tens of millivolts of ripple. With the buzzer lifted, the lead drop at about
-   5 mA is under 5 mV. *Mitigation:* measure at the module's own terminals,
-   record the meter model, and prefer a bench supply.
+   is about ±(0.5 % + 2 digits), roughly ±0.02 V at 3 V. The supply is an
+   unregulated battery eliminator on its 6 V tap with a series rheostat, which
+   carries mains-frequency ripple on its DC output. **That ripple cannot be read
+   on the DT830** — its lowest AC range is 200 V and will not resolve tens of
+   millivolts. With the buzzer lifted, the lead drop at about 5 mA is under
+   5 mV. *Mitigation:* measure the ripple on the school oscilloscope at the
+   module pins, fit roughly 1000 µF across the module's supply, measure voltage
+   at the module's own terminals, and record the meter model.
 
 4. **Temperature drift: about ±6 mV in `V_BE`, up to about ±20 mV in `V*`.**
    `V_BE` moves about −2 mV per °C, so ±3 °C in a session gives ±6 mV, and

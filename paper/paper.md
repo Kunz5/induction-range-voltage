@@ -11,19 +11,19 @@ Battery-powered induction metal detectors lose supply voltage as their batteries
 
 # 1. Introduction
 
-In June 2025, at the IIT Bombay Makerspace, I built MineRoverX [7], an autonomous rover that sweeps a metal detector across the ground for landmine detection. The detector module had no data output — it signalled only by sounding a buzzer — so I soldered a connection from the buzzer into the rover's microcontroller. While documenting the rover, I noted that the detector needed recalibrating "for different battery voltages". I had built a machine whose ability to find metal changed while it was running, and I did not know by how much, or even in which direction.
+In June 2025, at the IIT Bombay Makerspace, I built MineRoverX [6], an autonomous rover that sweeps a metal detector across the ground for landmine detection. The detector module had no data output — it signalled only by sounding a buzzer — so I soldered a connection from the buzzer into the rover's microcontroller. While documenting the rover, I noted that the detector needed recalibrating "for different battery voltages". I had built a machine whose ability to find metal changed while it was running, and I did not know by how much, or even in which direction.
 
-That question is not specific to my rover. Handheld detectors used in humanitarian demining, utility location and inspection [6] are almost all battery powered, and the supply falls throughout a session. If range changes with voltage, a detector that clears ground with a fresh battery may not clear it with a tired one — or may begin to false-alarm.
+That question is not specific to my rover. Handheld detectors used in humanitarian demining, utility location and inspection are almost all battery powered, and the supply falls throughout a session. If range changes with voltage, a detector that clears ground with a fresh battery may not clear it with a tired one — or may begin to false-alarm.
 
 The textbook expectation is simple. The detection signal scales with supply voltage and falls as the sixth power of distance, so, against a fixed threshold, the maximum range should scale as $V^{1/6}$: a 24 % drop in voltage would cost only about 4–5 % of range. This paper argues that this is incomplete. Supply voltage enters a detector twice — once in the strength of the signal and once in the level at which the alarm fires — and which of these dominates decides not only the size of the effect but its sign.
 
-The contributions of this version are: (i) a derivation that unifies four competing hypotheses in one expression; (ii) numerical predictions for my apparatus, committed publicly before data; (iii) an experimental design that measures trigger *voltage* at fixed distance, which is about a hundred times more precise than measuring distance directly; and (iv) an uncertainty analysis. Measurements will be reported in Version 2.
+The contributions of this version are: (i) a derivation that unifies four competing hypotheses in one expression; (ii) numerical predictions for my apparatus, committed publicly before data; (iii) an experimental design that measures trigger *voltage* at fixed distance, in which voltage is read about 30× more finely than distance, though distance error still enters through $g^2$ and is controlled with calipered spacers; and (iv) an uncertainty analysis. Measurements will be reported in Version 2.
 
 # 2. Theory
 
 ## 2.1 The detector
 
-The module is a commercial induction metal detector (ProtoSupplies MOD-43 type) with a square spiral coil printed on the circuit board. Its schematic [4] shows a transformer-feedback, tuned-collector oscillator running at roughly 300 kHz: the tank $L_1 \parallel C_3$ sits at the transistor's collector, and a coupled second winding $L_2$ feeds part of the tank voltage back to the base. The oscillation amplitude holds an alarm transistor off; when metal near the coil absorbs energy, the amplitude falls, the alarm transistor switches on, and the buzzer sounds. A trimmer potentiometer, R3, sets the sensitivity.
+The module is a commercial induction metal detector, silkscreened `MetalDetector_V2.3 (303METALDET)` and matched by eye to the ProtoSupplies MOD-43 with a square spiral coil printed on the circuit board. Its schematic [4] shows a transformer-feedback, tuned-collector oscillator running at roughly 300 kHz: the tank $L_1 \parallel C_3$ sits at the transistor's collector, and a coupled second winding $L_2$ feeds part of the tank voltage back to the base. The oscillation amplitude holds an alarm transistor off; when metal near the coil absorbs energy, the amplitude falls, the alarm transistor switches on, and the buzzer sounds. A trimmer potentiometer, R3, sets the sensitivity.
 
 ## 2.2 The coil's field at the target
 
@@ -101,7 +101,7 @@ The predictions below were committed to a public GitHub repository before any me
 
 **Primary hypothesis: H3**, on circuit grounds — the alarm is a transistor switched by oscillator amplitude, and a transistor's turn-on voltage does not scale with supply. **Main competitor: H0** — if the fixed term is small, H3 collapses towards H0. H1 and H2 are retained as the textbook expectation.
 
-**Worked example at this apparatus's geometry** ($a = 17.5$ mm measured; nominal range $d \approx 50$ mm recalled, to be re-measured), for a single lithium-ion cell discharging from 4.2 V to 3.2 V:
+**Worked example at this apparatus's geometry** ($a = 17.5$ mm measured; nominal range $d \approx 50$ mm recalled), for a single lithium-ion cell discharging from 4.2 V to 3.2 V:
 
 | Hypothesis | Predicted change in $d_{\max}$, 4.2 → 3.2 V |
 |---|---|
@@ -111,6 +111,8 @@ The predictions below were committed to a public GitHub repository before any me
 | H3, $V^* = 2.0$ V | +6.4 % |
 | H3, $V^* = 2.5$ V | +12.1 % |
 | H3, $V^* = 2.8$ V | +19.8 % |
+
+**Note added 15 October 2026.** The recalled range of about 50 mm is contradicted by the pilot, in which the coin produced no alarm at 20 mm at 5.00 V; the true range at 5.00 V is therefore shorter than 20 mm and will be re-measured before Block 1. The table above is computed at the recalled 50 mm and is left unchanged, because `theory/predictions.md` was frozen at the first data commit. It stands as an illustration that the hypotheses are numerically separable, not as a prediction for the true geometry. The slopes and the $n_{\text{eff}}$ table below do not depend on this figure.
 
 This table demonstrates that the hypotheses are numerically separable at this geometry; H3 depends on $V^*$, which is measured, so the three H3 rows bracket plausible cases rather than predicting one value.
 
@@ -135,18 +137,20 @@ This table demonstrates that the hypotheses are numerically separable at this ge
 | Supply | School battery eliminator (Jainco, stepped), 6 V tap, with a laboratory rheostat in series for fine control | laboratory equipment |
 | Voltmeter | DT830-series 3½-digit digital multimeter, 20 V DC range, 0.01 V resolution; accuracy not stated on the case (series typical ±(0.5 % + 2 digits)); probes on the module's own supply pins | — |
 | Trigger latch | ESP32 microcontroller reading the alarm transistor's collector through a 10 kΩ / 15 kΩ divider on GPIO 34; firmware threshold 450 mV; detection confirmed after 50 ms continuous | firmware in repository |
-| Modifications | Buzzer disconnected for the main run; 10 kΩ pull-down role taken by the divider; sensitivity trimmer R3 fixed with a witness mark | recorded |
+| Modifications | Buzzer disconnected for the main run; 10 kΩ pull-down role taken by the divider; sensitivity trimmer R3 **to be fixed with a witness mark before Block 1** | recorded |
+| Spacers | Non-metallic, thickness to be measured with a vernier caliper (0.1 mm) | **not yet acquired — the only instrument recorded so far is a 1 mm ruler** |
 | Environment | Room temperature by thermometer at the start and end of each block | — |
 
 The latch replaces human judgement of "has it triggered?" — otherwise the largest source of error — and records two instants per trial (first active sample and confirmation), whose separation measures the chatter at the trigger point. Near $V^*$ the H3 model predicts this chatter should widen, giving a second, independent signature of H3.
 
 # 5. Method
 
-1. **No-target sweep.** With no metal within 30 cm of the coil, set the supply to 5.00 V and lower it in 0.01 V steps. Record the voltage at which the latch fires on its own ($V^*$), or record "none" and the lowest voltage reached.
-2. **Primary measurement — voltage at change of state, at fixed distance.** Place the coin flat and centred on non-metallic spacers at the specified distance. Starting at 5.00 V, lower the supply in 0.01 V steps and record the meter reading at the first change in alarm state, together with its direction (off → on, or on → off). If the alarm does not change state between 5.00 V and the oscillator's dropout, record that outcome; it is itself evidence (H0, or a distance outside the range of the sweep).
-3. **Distances:** 10, 12, 15, 20, 25, 30, 35 and 40 mm, five repeats each (40 trials), in a pre-registered randomised order (seed 20261014) arranged in four blocks of ten, with no distance repeated consecutively. Each block is bracketed by no-target sweeps to monitor drift.
-4. **Secondary measurement:** at 5.0, 4.2, 3.6 and 3.2 V, move the coin slowly towards the coil and record the distance at first alarm (three repeats each, randomised). This is the quantity a user of the detector experiences, measured by an independent route with independent errors.
-5. **Recording:** every reading is logged at the moment it occurs. Raw values are never edited; corrections go in a notes column.
+1. **Measure the range at 5.00 V.** Bring the coin slowly towards the coil at the full supply and record the greatest distance at which the alarm sounds. Distances inside that range may show no change of state during a sweep, which the protocol amendment of 15 October records as an outcome in its own right.
+2. **No-target sweep.** With no metal within 30 cm of the coil, set the supply to 5.00 V and lower it in 0.01 V steps. Record the voltage at which the latch fires on its own ($V^*$), or record "none" and the lowest voltage reached.
+3. **Primary measurement — voltage at change of state, at fixed distance.** Place the coin flat and centred on non-metallic spacers at the specified distance. Starting at 5.00 V, lower the supply in 0.01 V steps and record the meter reading at the first change in alarm state, together with its direction (off → on, or on → off). If the alarm does not change state between 5.00 V and the oscillator's dropout, record that outcome; it is itself evidence (H0, or a distance outside the range of the sweep).
+4. **Distances:** 10, 12, 15, 20, 25, 30, 35 and 40 mm, five repeats each (40 trials), in a pre-registered randomised order (seed 20261014) arranged in four blocks of ten, with no distance repeated consecutively. Each block is bracketed by no-target sweeps to monitor drift.
+5. **Secondary measurement:** at 5.0, 4.2, 3.6 and 3.2 V, move the coin slowly towards the coil and record the distance at first alarm (three repeats each, randomised). This is the quantity a user of the detector experiences, measured by an independent route with independent errors.
+6. **Recording:** every reading is logged at the moment it occurs. Raw values are never edited; corrections go in a notes column.
 
 **Pre-registered exclusion rule.** A trial may be excluded only for a reason recorded before its value is read: the supply voltage was not recorded or drifted by more than 0.02 V; the target was moved or found off-axis; metal came within 30 cm of the coil; the module had been powered for less than 60 s; or the trial was out of the randomised order. No trial is excluded because of its value, and the analysis is reported with and without exclusions.
 
@@ -156,7 +160,7 @@ The latch replaces human judgement of "has it triggered?" — otherwise the larg
 
 $$\frac{\delta(g^2)}{g^2} = \frac{6d\,\delta d}{a^2+d^2} = n_{\text{eff}}\,\frac{\delta d}{d},$$
 
-which is largest at $d = a$. With $a = 17.5$ mm and $\delta d = 1$ mm, it is 14.8 % at 10 mm, peaks at 17.1 % at 17.5 mm, and is 12.6 % at 40 mm. The budget is nearly flat across the measurement range. The board's thickness (≈1.6 mm) makes "distance from the coil plane" ambiguous by up to 0.8 mm; distances are measured from the coil face with fixed spacers.
+which is largest at $d = a$. With $a = 17.5$ mm and $\delta d = 1$ mm, it is 14.8 % at 10 mm, peaks at 17.1 % at 17.5 mm, and is 12.6 % at 40 mm. The budget is nearly flat across the measurement range. With spacers measured to 0.1 mm the coupling error falls to about 1.5 %, which is why calipered spacers matter more than a finer voltmeter. The board's thickness (≈1.6 mm) makes "distance from the coil plane" ambiguous by up to 0.8 mm; distances are measured from the coil face with fixed spacers.
 
 **Voltage.** The meter resolves 0.01 V, but its absolute accuracy is coarser — about ±0.04 V at 3.5 V for this meter type. Resolution and random reading error scatter individual points. A calibration error does not simply shift every point equally once the data are plotted against $1/V$: a gain error rescales the axis, and an offset becomes a non-uniform shift in $1/V$, so both can bias the fitted slope and intercept. The direct comparison of the measured and fitted $V^*$ — made with the same meter — is partly protected against this, since a common error moves both.
 
@@ -164,7 +168,9 @@ which is largest at $d = a$. With $a = 17.5$ mm and $\delta d = 1$ mm, it is 14.
 
 **Temperature.** $V_{BE}$ changes by about −2 mV per °C, and $V^* = V_0/(\alpha-\gamma)$ amplifies this if $\alpha-\gamma$ is small. Temperature is recorded at each block, and the bracketing no-target sweeps detect drift directly.
 
-**Supply ripple.** An unsmoothed eliminator carries AC ripple on its DC output; it is measured on the meter's AC range at the module pins before the run.
+**Supply ripple.** An unsmoothed eliminator carries AC ripple on its DC output. It cannot be read on the DT830, whose lowest AC range is 200 V and will not resolve tens of millivolts; it is measured instead on the school oscilloscope at the module pins, with a capacitor of about 1000 µF across the module's supply as mitigation.
+
+**Load-dependent sag.** The series rheostat sets voltage by dropping it across a resistance, so the output moves with load current. Lifting the buzzer removes the ≈23 mA step that the alarm would otherwise draw at the moment of triggering, leaving the divider's 0.2 mA, so the remaining current change — and the sag it causes — is small.
 
 # 7. Simulated demonstration of the analysis
 
@@ -178,16 +184,26 @@ Two features of the simulation inform the real experiment. First, the fit recove
 
 # 8. Limitations
 
-- **Coil shape.** The model treats a square spiral as a single circular loop. The pre-registered $a = 17.5$ mm is the inscribed radius; results will also be reported with the equal-area radius of 19.7 mm to show how much the approximation matters.
+- **Coil shape.** The model treats a square spiral as a single circular loop. The pre-registered $a = 17.5$ mm is the inscribed radius of the mean square, $(\text{outer} + \text{inner})/4$; results will also be reported with the equal-area radius of 19.7 mm to show how much the approximation matters.
 - **Target size and material.** The 20 mm coin is comparable in size to the coil, not small as the model assumes, and its ferritic steel adds magnetisation to the eddy-current response.
 - **Threshold structure.** The split of the alarm margin into supply-proportional and fixed parts is inferred from the circuit's topology; the measurement of $V^*$ tests it.
 - **Oscillator linearity.** Amplitude proportional to supply fails near start-up.
+- **A modified board.** Results apply to the board as modified: buzzer lifted, with the divider taking the pull-down role. Whether the modification shifts the trigger voltage has not been established — the pilot compared with and without the buzzer but recorded only a summary, so no formal test exists. Twelve paired trials are planned before Block 1.
 - **Air, not soil.** Ground mineralisation is outside this study.
 - **One module, one target.** Generalising requires further detectors and targets.
 
 # 9. Planned measurement and further work
 
+**Pilot.** At 20 mm the alarm appeared at about 3.0 V as the supply fell, over twelve trials recorded only as a summary. The direction — alarm switching *on* as voltage falls — is the one H3 predicts and the opposite of a fixed threshold. It is not evidence until the no-target sweep establishes whether the module alarms on its own at that voltage, in which case the number is $V^*$ and not a detection at all.
+
 Version 2 will report the measurements described in Section 5, analysed exactly as pre-registered, with all raw data in the repository. Further work: (i) a controlled test of R3's role, by changing it only after the main data are complete and re-measuring $V^*$; (ii) the transient supply sag when the rover's motors accelerate, which this analysis predicts will momentarily change detection range; (iii) a supply-compensated alarm threshold in the rover's firmware, so that sensitivity stays constant as the battery drains; (iv) repetition through soil.
+
+# Acknowledgement
+
+An AI assistant was used for repository scaffolding, the plotting and fitting
+script, typesetting, and as a check on my algebra. The derivation, the
+predictions and the discussion are my own work and my own wording. No data was
+generated, estimated or completed by it at any point.
 
 # References
 
@@ -196,5 +212,4 @@ Version 2 will report the measurements described in Section 5, analysed exactly 
 3. NCERT, *Physics Part I, Class XII*, Chapter 6: Electromagnetic Induction.
 4. ProtoSupplies, "Metal Detector Module" (MOD-43) product documentation and schematic, protosupplies.com.
 5. Government of India, *Coinage of One Rupee, Two Rupees, Five Rupees, Ten Rupees and Twenty Rupees Rules, 2019* — specification of the ₹1 coin.
-6. A. Winfield, *Robotics: A Very Short Introduction*, Oxford University Press.
-7. K. N. Khanwani, MineRoverX repository, github.com/Kunz5/mine-rover-x.
+6. K. N. Khanwani, MineRoverX repository, github.com/Kunz5/mine-rover-x.

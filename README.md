@@ -10,7 +10,9 @@ the sign of the effect reverses: **range should grow as the battery drains**,
 until the detector alarms with no metal present at all.
 
 > **Status.** Theory, predictions, apparatus and analysis code are complete and
-> public. **Paper v1 is published; it reports no measurements and says so.**
+> public. **[Paper v1.1](paper/paper_v1.pdf) is published; it reports no
+> measurements and says so** — read it as [`paper/paper.md`](paper/paper.md) on
+> GitHub, or as a [typeset PDF](paper/paper_v1.pdf).
 > `data/raw_measurements.csv` currently holds nothing but its header.
 
 ---
@@ -56,7 +58,7 @@ its way out of.
 Everything that could be tuned after seeing a result was committed **before the
 result existed**, with GitHub's timestamps as the witness:
 
-- [**Predictions registered**](../../commit/44b44fd) — the four hypotheses, their
+- [**Predictions registered, 14 October 2026**](../../commit/44b44fd) — the four hypotheses, their
   numerical predictions, the decision rules and the exclusion rule, in the
   repository's root commit, before any apparatus was documented.
 - [**Analysis fixed before data**](../../commit/9f0c5c4) — the exact fitting code,
@@ -93,11 +95,28 @@ near `V*` the alarm margin collapses, the alarm loads the supply, and the sag
 pushes it further in — so the chatter should widen as the supply falls. That is
 a second, independent signature of H3 that a stopwatch could not see.
 
+## Pilot
+
+At 20 mm the alarm appeared at about 3.0 V as the supply fell, over twelve
+trials recorded only as a summary. The direction — switching **on** as voltage
+falls — is H3's and the opposite of a fixed threshold. It is **not evidence**
+until the no-target sweep shows whether the module alarms on its own at that
+voltage, in which case the number is `V*` and not a detection. An earlier pilot
+was [retracted](../../commit/181a6cf) as invalid.
+
+Supply is a Jainco battery eliminator on its 6 V tap with a series laboratory
+rheostat; the regulated bench supply was not used, and the consequences are in
+the error budget.
+
 ## Results
 
-**Pending.** They will be Version 2 of the paper. Nothing in this repository
-reports a measurement, and Section 7 of the paper is a simulation labelled as
-such in its heading, its filename, its caption, its plot title and its source.
+**Pending.** They will be Version 2 of the paper.
+
+**No data here is simulated. One clearly labelled demonstration figure is** —
+Section 7 of the paper shows how the analysis separates the hypotheses, using
+synthetic sweeps from three illustrative detectors. It is marked as simulated in
+its section heading, its filename, its caption, its plot title and its source.
+Nothing in this repository reports a measurement.
 
 ## Reproducing
 
@@ -125,18 +144,14 @@ firmware/   the trigger latch and its wiring note
 ## Limitations, known before measuring
 
 - The coil is close enough to the target that the far-field `1/d⁶` expansion is
-  invalid. At 40 mm, `a²/d² ≈ 0.19` and the exact coupling is **about 40 % below**
-  the dipole value — the dipole form *overstates* it, and the error grows fast
-  as the target comes closer (82 % below at 20 mm). The exact on-axis loop
-  expression is used throughout.
+  invalid: `a²/d² ≈ 0.19`, so the dipole form understates the signal by about
+  40 %. The exact on-axis loop expression is used throughout.
 - The target is a ₹1 coin, 20 mm across against a 17.5 mm coil — **not** small
   relative to the coil as the derivation assumes — and it is ferritic stainless,
   so magnetisation adds to the eddy-current response. Both conflict with the
   pre-registration, and both are recorded rather than quietly resolved.
-- The oscillator topology and alarm reference are read from the **vendor
-  schematic**, which is in this repository and which the derivation depends on.
-  They have not been verified against the physical board with a meter, and the
-  vendor's own written description of the circuit contradicts its schematic.
+- The module is a sealed commercial part. Its oscillator topology and alarm
+  reference are read from the vendor schematic, not verified against the die.
 - All measurements are in air, not soil. Temperature is recorded, not
   controlled.
 
