@@ -68,7 +68,7 @@ Block 4: no-target V* sweep (end)
 Secondary: S01 5.0 V, S02 4.2 V, S03 3.2 V, S04 3.6 V, S05 3.2 V, S06 5.0 V, S07 4.2 V, S08 3.6 V, S09 4.2 V, S10 5.0 V, S11 3.6 V, S12 3.2 V
 ```
 
-Pilot (separate, not part of this order): 20 mm, buzzer fitted → lifted →
-lifted → fitted.
+Pilot (separate, not part of this order, **not yet run**): 20 mm, six trials
+with the buzzer fitted and six lifted, in ABBA order.
 
 Exclusion rule 5 ("out of the randomised order") refers to this list.

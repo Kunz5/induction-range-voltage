@@ -49,12 +49,17 @@ Rated 3.0–5.0 V. Vendor current figures, not yet verified here: ≈ 5 mA silen
 ≈ 28 mA while beeping. That 23 mA step is a measurement hazard — see the error
 list below.
 
+**Variable supply not yet acquired.** The module was previously powered from the
+ESP32's fixed 3.3 V rail on the rover, which is why no sweep has been possible
+and why the self-test and pilot are both outstanding. Acquiring an LM2596
+adjustable buck converter, or using a school lab variable DC supply.
+
 | field | value |
 |---|---|
-| source (bench supply / battery) | |
+| source (bench supply / battery) | **none yet** — LM2596 adjustable buck converter or lab variable DC supply |
 | bench supply model | |
 | voltage measured at the module terminals, not at the supply | |
-| meter used, and its stated accuracy | |
+| meter used, and its stated accuracy | DT830-series 3½-digit DMM, 20 V DC range, 0.01 V resolution. No accuracy printed on the case; the series is typically ±(0.5 % + 2 digits), which is **an assumption about this meter, not a specification of it** |
 | series resistance between supply and module, if measured | |
 
 ## Target
@@ -62,10 +67,10 @@ list below.
 | field | value | source |
 |---|---|---|
 | object | ₹1 coin, dated 2020 (2019 series) | measured |
-| material | ferritic stainless steel, 83 % Fe / 17 % Cr (Coinage Rules 2019) — **expected magnetic**; magnet test on this coin not yet done | official spec |
-| dimensions | 20 mm diameter, 3.09 g (permitted 2.97–3.21 g); thickness not specified in the Rules | official spec, **not measured** |
+| material | ferritic stainless steel, 83 % Fe / 17 % Cr (Coinage Rules 2019). **Magnet test on this coin: it sticks** — magnetic, confirmed directly rather than inferred from the published composition | spec + measured |
+| dimensions | diameter **20 mm measured by ruler**, agreeing with the 20 mm in the Rules. Mass 3.09 g (permitted 2.97–3.21 g) and thickness are spec only, not measured — no scale, and a 1 mm ruler cannot resolve the thickness | measured + spec |
 | orientation | flat, parallel to the coil, centred on the axis; same coin every trial | measured |
-| same object for pilot and all main-run trials | yes — this coin is set aside for the experiment | measured |
+| same object for every trial | yes — this coin is set aside for the experiment | measured |
 
 **Note.** 20 mm diameter is comparable to the coil (`a` = 17.5 mm), not small
 relative to it as the model assumes; ferritic steel adds magnetisation to the
@@ -99,7 +104,7 @@ Rupees Rules, 2019*; Wikipedia, "Indian 1-rupee coin".
 
 | field | value |
 |---|---|
-| ambient temperature range over the session | 26 °C at pilot (thermometer); to be recorded at the start and end of every block in the main run |
+| ambient temperature range over the session | 26 °C measured with a thermometer at the time the coil and coin were measured; to be recorded at the start and end of every block in the main run |
 | nearby metal, and distance to it | |
 | mains or other interference noted | |
 | floor or bench material | |
@@ -144,38 +149,48 @@ in advance rather than chosen after seeing the result. `theory/predictions.md`
 is not changed: 17.5 mm remains the pre-registered value and the equal-area
 figure is reported alongside, never in place of it.
 
-## Self-test — firmware latch, before pilot
+## Self-test — firmware latch
+
+**NOT YET RUN.**
+
+A previous version of this file recorded readings of 0 / 1 / 1 at supplies of
+5.0 V and 2.6 V. Those readings were not valid. The module was powered from the
+ESP32's fixed 3.3 V pin and no variable supply existed, so neither 5.0 V nor
+2.6 V could be applied and no such reading could have been taken. The entry is
+withdrawn rather than corrected; see the retraction commit.
 
 | step | condition | expected | read |
 |---|---|---|---|
-| 1 | no metal near coil, 5.0 V | 0 | 0 |
-| 2 | metal on coil, 5.0 V | 1 | 1 |
-| 3 | metal on coil, **2.6 V** | 1 | 1 |
+| 1 | no metal near coil, 5.0 V | 0 | — |
+| 2 | metal on coil, 5.0 V | 1 | — |
+| 3 | metal on coil, **2.6 V** | 1 | — |
 
-Result: **passed**. Step 3 is the one that matters — it confirms the trigger is
-decided against the 450 mV firmware threshold and not against a logic level,
-which would have gone deaf at the bottom of the sweep.
+Step 3 remains the one that matters: it is what confirms the trigger is decided
+against the 450 mV firmware threshold rather than a logic level. Until it has
+been run, the divider and pull-down wiring is unverified and the firmware's
+trigger path is unexercised on hardware.
 
 ## Pilot
 
-| field | value |
-|---|---|
-| distance | 20 mm |
-| alarm behaviour | silent at 5.0 V; sounds as the supply falls through ≈ 3.5 V |
-| trigger voltages | 3.52 (fitted), 3.54 (lifted), 3.50 (lifted), 3.51 (fitted) V |
-| design | ABBA — fitted, lifted, lifted, fitted — so a linear drift over the session cancels |
-| fitted mean / lifted mean | 3.515 V / 3.520 V; difference **+0.005 V** |
-| spread | range 0.04 V, sd 0.0171 V (n = 4) |
-| 95 % CI on the difference | **+0.005 ± 0.073 V**, from t(2 dof) |
-| conclusion | **No difference detected.** With two trials per arm the pilot can only exclude a shift larger than about 0.07 V; it does not establish that the modification is neutral to better than that. |
-| chatter figures | **not recorded** — the firmware's `t_first` / `t_confirm` / dropout / peak output is therefore still unexercised on real hardware |
-| temperature | 26 °C, thermometer |
-| data | `data/pilot.csv` |
+**NOT YET RUN.** No pilot data exists.
+
+A previous version of this file recorded four trigger voltages at 20 mm
+(3.52 / 3.54 / 3.50 / 3.51 V) and a buzzer comparison drawn from them. Those
+were not measurements. The supply was the ESP32's fixed 3.3 V rail, so no sweep
+down to a trigger point was possible and no trigger voltage could have been
+read. `data/pilot.csv` is deleted and the statistics derived from it — the
+0.005 V difference, the 0.0171 V scatter, the ±0.073 V interval — are
+withdrawn in full.
+
+Planned, once a variable supply is in hand: twelve trials at 20 mm, six with the
+buzzer fitted and six lifted, in ABBA order, same coin.
 
 ## Fixed from this point
 
-- **R3, the sensitivity potentiometer: frozen** at its pilot position, and not
-  to be touched for the rest of the experiment. `R3` sets the oscillator's
+- **R3, the sensitivity potentiometer: to be frozen** at its position as of the
+  first valid self-test, by a witness mark on the body and shaft. The mark is
+  not yet applied and the position is not yet photographed, so R3 is **not yet
+  fixed**. Once marked it is not to be touched for the rest of the experiment. `R3` sets the oscillator's
   amplitude and therefore `V* = V_BE/c`, so moving it moves the quantity being
   measured. If it is moved by accident, record it and treat the data before and
   after as separate series.
