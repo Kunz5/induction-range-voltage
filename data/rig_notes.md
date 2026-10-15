@@ -60,7 +60,7 @@ supply's own calibration are both excluded.
 
 | field | value |
 |---|---|
-| source (bench supply / battery) | school physics lab variable DC supply — **model to be recorded at the session** |
+| source (bench supply / battery) | **Jainco battery eliminator, 6 V tap, series lab rheostat.** Unregulated; the rheostat sets voltage by dropping it across a series resistance, so the output moves with load current. The regulated lab supply was not used. |
 | bench supply model | |
 | voltage measured at the module terminals, not at the supply | yes — DMM probes at the module's own power terminals |
 | meter used, and its stated accuracy | DT830-series 3½-digit DMM, 20 V DC range, 0.01 V resolution. No accuracy printed on the case; the series is typically ±(0.5 % + 2 digits), which is **an assumption about this meter, not a specification of it** |
@@ -155,39 +155,61 @@ figure is reported alongside, never in place of it.
 
 ## Self-test — firmware latch
 
-**NOT YET RUN.**
-
-A previous version of this file recorded readings of 0 / 1 / 1 at supplies of
-5.0 V and 2.6 V. Those readings were not valid. The module was powered from the
-ESP32's fixed 3.3 V pin and no variable supply existed, so neither 5.0 V nor
-2.6 V could be applied and no such reading could have been taken. The entry is
-withdrawn rather than corrected; see the retraction commit.
+**Run. Passed on the second attempt.**
 
 | step | condition | expected | read |
 |---|---|---|---|
-| 1 | no metal near coil, 5.0 V | 0 | — |
-| 2 | metal on coil, 5.0 V | 1 | — |
-| 3 | metal on coil, **2.6 V** | 1 | — |
+| 1 | no metal near coil, 5.0 V | 0 | 0 |
+| 2 | metal on coil, 5.0 V | 1 | 1 |
+| 3 | metal on coil, **2.6 V** | 1 | 1 |
 
-Step 3 remains the one that matters: it is what confirms the trigger is decided
-against the 450 mV firmware threshold rather than a logic level. Until it has
-been run, the divider and pull-down wiring is unverified and the firmware's
-trigger path is unexercised on hardware.
+An **earlier attempt read 1 / 0 / 1 and failed.** It was repeated and passed.
+**The cause of the first failure was not identified or recorded.** A false 1
+with no metal present and a missed 1 with metal present are not a consistent
+fault, which points to something intermittent — a loose ground, a marginal
+divider connection, or a reading taken before the line settled — rather than a
+wrong threshold. Until the cause is known, an intermittent fault could put wrong
+rows into the main run without announcing itself. To be re-checked at the start
+of the next session, and `z` to be read before and after every block.
 
 ## Pilot
 
-**NOT YET RUN.** No pilot data exists.
+**Run, but recorded as a summary only. Per-trial values were not written down at
+the time, so there is no `data/pilot.csv`, no scatter, and no confidence
+interval.**
 
-A previous version of this file recorded four trigger voltages at 20 mm
-(3.52 / 3.54 / 3.50 / 3.51 V) and a buzzer comparison drawn from them. Those
-were not measurements. The supply was the ESP32's fixed 3.3 V rail, so no sweep
-down to a trigger point was possible and no trigger voltage could have been
-read. `data/pilot.csv` is deleted and the statistics derived from it — the
-0.005 V difference, the 0.0171 V scatter, the ±0.073 V interval — are
-withdrawn in full.
+| field | value |
+|---|---|
+| supply | **Jainco battery eliminator, 6 V tap, with a lab rheostat in series** — not the school lab variable DC supply that was planned |
+| voltage read | DT830 DMM, 20 V DC range, at the detector's own V+ / GND |
+| target | 2020 ₹1 coin at 20 mm, flat, centred |
+| trials | 12, buzzer order F / L / L / F / L / F / F / L / L / F / F / L |
+| temperature | 26 °C at start and end |
+| observed | silent at 5.00 V; **alarm appears as the supply falls to ≈ 3.0 V** |
+| scatter | ≈ 0.03 V, by eye, from memory — **not a measured statistic** |
+| fitted vs lifted | indistinguishable, ≈ 0.015 V by eye — **no difference observed, not formally tested** |
+| trend across trials | none seen |
 
-Planned, once a variable supply is in hand: twelve trials at 20 mm, six with the
-buzzer fitted and six lifted, in ABBA order, same coin.
+What this does and does not establish: the alarm state at a fixed distance
+**does** change with supply voltage, and it appears as voltage *falls*. What it
+cannot establish is whether the coin caused it, because **no no-target sweep was
+run**. If the module alarms on its own at ≈ 3.0 V with nothing near the coil,
+the observation is `V*` and not a detection at all. That control decides the
+meaning of this entry and has not yet been done.
+
+From Block 1 every trial value is logged at the moment the latch confirms.
+
+## Still to record before Block 1
+
+1. **No-target `V*` sweep** — the control that decides what the ≈ 3.0 V
+   observation means.
+2. **AC ripple at the detector pins.** The supply is an unregulated battery
+   eliminator with a series rheostat, not a regulated bench supply. Ripple and
+   load-dependent sag are both now live error terms rather than hypothetical
+   ones.
+3. **One verbatim serial log** — the firmware's chatter output is still
+   unexercised.
+4. **R3 chosen and witness-marked**, after 1 and 2 (see below).
 
 ## Fixed from this point
 
