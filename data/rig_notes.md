@@ -49,16 +49,20 @@ Rated 3.0–5.0 V. Vendor current figures, not yet verified here: ≈ 5 mA silen
 ≈ 28 mA while beeping. That 23 mA step is a measurement hazard — see the error
 list below.
 
-**Variable supply not yet acquired.** The module was previously powered from the
+**No variable supply in hand yet.** The module was previously powered from the
 ESP32's fixed 3.3 V rail on the rover, which is why no sweep has been possible
-and why the self-test and pilot are both outstanding. Acquiring an LM2596
-adjustable buck converter, or using a school lab variable DC supply.
+and why the self-test and pilot are both outstanding.
+
+Planned: the **school physics lab variable DC power supply**, with the model
+recorded at the session. Voltage is read with the DMM **at the module's own
+terminals**, never at the supply's own display, so that lead drop and the
+supply's own calibration are both excluded.
 
 | field | value |
 |---|---|
-| source (bench supply / battery) | **none yet** — LM2596 adjustable buck converter or lab variable DC supply |
+| source (bench supply / battery) | school physics lab variable DC supply — **model to be recorded at the session** |
 | bench supply model | |
-| voltage measured at the module terminals, not at the supply | |
+| voltage measured at the module terminals, not at the supply | yes — DMM probes at the module's own power terminals |
 | meter used, and its stated accuracy | DT830-series 3½-digit DMM, 20 V DC range, 0.01 V resolution. No accuracy printed on the case; the series is typically ±(0.5 % + 2 digits), which is **an assumption about this meter, not a specification of it** |
 | series resistance between supply and module, if measured | |
 
