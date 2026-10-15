@@ -125,14 +125,18 @@ firmware/   the trigger latch and its wiring note
 ## Limitations, known before measuring
 
 - The coil is close enough to the target that the far-field `1/d⁶` expansion is
-  invalid: `a²/d² ≈ 0.19`, so the dipole form understates the signal by about
-  40 %. The exact on-axis loop expression is used throughout.
+  invalid. At 40 mm, `a²/d² ≈ 0.19` and the exact coupling is **about 40 % below**
+  the dipole value — the dipole form *overstates* it, and the error grows fast
+  as the target comes closer (82 % below at 20 mm). The exact on-axis loop
+  expression is used throughout.
 - The target is a ₹1 coin, 20 mm across against a 17.5 mm coil — **not** small
   relative to the coil as the derivation assumes — and it is ferritic stainless,
   so magnetisation adds to the eddy-current response. Both conflict with the
   pre-registration, and both are recorded rather than quietly resolved.
-- The module is a sealed commercial part. Its oscillator topology and alarm
-  reference are read from the vendor schematic, not verified against the die.
+- The oscillator topology and alarm reference are read from the **vendor
+  schematic**, which is in this repository and which the derivation depends on.
+  They have not been verified against the physical board with a meter, and the
+  vendor's own written description of the circuit contradicts its schematic.
 - All measurements are in air, not soil. Temperature is recorded, not
   controlled.
 

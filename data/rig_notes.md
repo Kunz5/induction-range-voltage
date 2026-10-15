@@ -78,8 +78,8 @@ supply's own calibration are both excluded.
 
 **Note.** 20 mm diameter is comparable to the coil (`a` = 17.5 mm), not small
 relative to it as the model assumes; ferritic steel adds magnetisation to the
-eddy-current response. Both are limitations. Dimensions are official spec, not
-measured.
+eddy-current response. Both are limitations. The diameter and the magnetism were
+checked directly; the mass and thickness are specification only.
 
 **Two conflicts with the pre-registered derivation, recorded rather than
 resolved here.** Section B of `theory/derivation.md` states that a non-ferrous
@@ -225,10 +225,18 @@ reason, and the paper reports the method as amended.
 
 1. **No-target `V*` sweep** — the control that decides what the ≈ 3.0 V
    observation means.
-2. **AC ripple at the detector pins.** The supply is an unregulated battery
-   eliminator with a series rheostat, not a regulated bench supply. Ripple and
-   load-dependent sag are both now live error terms rather than hypothetical
-   ones.
+2. **AC ripple at the detector pins — and the DT830 cannot measure it.** Its
+   lowest AC range is 200 V, which will not resolve tens of millivolts. Either
+   borrow the school CRO, or fit roughly 1000 µF across the module's supply pins
+   and record that as the mitigation rather than claiming a measurement that was
+   not taken.
+
+   **The load-sag half of this concern is largely solved.** The rheostat sets
+   voltage by dropping it across a series resistance, so output moves with load
+   current — but lifting the buzzer cut the current step at the trigger from
+   about 23 mA to the divider's 0.2 mA. The rail therefore barely moves when the
+   alarm switches, and the positive-feedback chatter that an unregulated supply
+   would otherwise cause near `V*` is largely removed. Ripple remains.
 3. **One verbatim serial log** — the firmware's chatter output is still
    unexercised.
 4. **R3 chosen and witness-marked**, after 1 and 2 (see below).
