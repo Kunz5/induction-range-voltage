@@ -199,6 +199,28 @@ meaning of this entry and has not yet been done.
 
 From Block 1 every trial value is logged at the moment the latch confirms.
 
+## Protocol amendment — 15 October 2026, before any main-run data
+
+**The primary measurement records the voltage at the *first change of alarm
+state* and its *direction* (off→on or on→off), not only off→on. "No change of
+state between 5.00 V and dropout" is recorded as an outcome in its own right.**
+
+Reason: under H1 and H2 the alarm switches *off* as the supply falls, and under
+H0 it does not change state at all. The original wording — "lower the supply
+until the alarm first sounds" — could only record an off→on transition, which is
+the signature H3 predicts. It would have made the outcomes that refute H3
+literally unrecordable, and a distance that produced one would have looked like
+a failed trial rather than a result.
+
+The amendment therefore **removes a bias that favoured the primary hypothesis**.
+It widens what can be written down; it does not change what is predicted. The
+hypotheses, the predicted slopes, the decision rules and the exclusion rule are
+all unchanged.
+
+`theory/predictions.md` is frozen and is **not** edited. Its section 4 still
+carries the original wording. This entry is the divergence, dated, with its
+reason, and the paper reports the method as amended.
+
 ## Still to record before Block 1
 
 1. **No-target `V*` sweep** — the control that decides what the ≈ 3.0 V

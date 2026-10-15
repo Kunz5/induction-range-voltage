@@ -136,16 +136,17 @@ trial_id, order, mode, voltage_V, distance_mm, edge_rate, temp_C, target, notes
 `secondary` (supply fixed, distance swept to the trigger) or `no_target`
 (supply swept with nothing nearby, to find `V*`).
 
-## Timeline
+## Status
 
-| date | step |
+| stage | state |
 |---|---|
-| _to be filled from the commit log_ | predictions registered |
-| | rig built and documented |
-| | pilot run |
-| | full measurement series |
-| | analysis |
-| | write-up |
+| Theory and predictions | complete; pre-registered before any data |
+| Apparatus and method | complete; latch firmware and randomised order committed |
+| **Paper** | **Version 1 published** — theory, predictions, design, uncertainty analysis, and a clearly labelled simulated demonstration |
+| Measurements | pending — to be reported in Version 2 |
+
+Dates for every step are in the commit log, which is the record this project
+rests on.
 
 ## A note on how this was made
 
