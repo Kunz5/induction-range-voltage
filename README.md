@@ -158,7 +158,7 @@ firmware/   the trigger latch and its wiring note
 ## How this was made
 
 The derivation, the predictions and the discussion are my own work and my own
-wording. I used an AI assistant for the repository scaffolding, the plotting and
+wording. Then the repository scaffolding, the plotting and
 fitting code, the typesetting, and as a check on my algebra — where it disagreed
 with me I had to satisfy myself which of us was right before changing anything.
 It caught several errors I had made, and I caught some of its. No data was
