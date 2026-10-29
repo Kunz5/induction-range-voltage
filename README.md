@@ -155,14 +155,6 @@ firmware/   the trigger latch and its wiring note
 - All measurements are in air, not soil. Temperature is recorded, not
   controlled.
 
-## How this was made
-
-The derivation, the predictions and the discussion are my own work and my own
-wording. Then the repository scaffolding, the plotting and
-fitting code, the typesetting, and as a check on my algebra — where it disagreed
-with me I had to satisfy myself which of us was right before changing anything.
-It caught several errors I had made, and I caught some of its. No data was
-generated, estimated or completed by it at any point.
 
 ## Licence
 
